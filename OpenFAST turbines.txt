@@ -1,0 +1,16 @@
+fleet1:
+turbine1 -> normal
+turbine2 -> 1% mass imbalance
+turbine3 -> 2% mass imbalance
+
+fleet2: 
+turbine6 -> normal
+turbine7 -> erosion of -20 cl, + 350 cd
+turbine10 -> aerodynamic imbalance equivalent to 0.5 degree in 1 blade
+turbine11 -> aerodynamic imbalance equivalent to 2 degrees in 1 blade
+
+degrading_fleet:
+turbine4 -> mass imbalance increasing 0.00001 by simulation
+turbine5 -> mass imbalance increasing 0.0005% by simulation
+turbine8 -> increasing erosion of -0.003% cl, + 0.05% cd 
+turbine9 -> increasing erosion of -0.0001% cl, + 0.002% cd 

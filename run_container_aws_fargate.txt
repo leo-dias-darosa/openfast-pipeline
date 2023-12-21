@@ -1,0 +1,41 @@
+aws ecs stop-task \
+    --cluster openfast-cluster \
+    --task-definition openfast-container-task \
+
+docker tag openfast-containers:latest 724768072950.dkr.ecr.sa-east-1.amazonaws.com/openfast-containers:latest
+
+docker push 724768072950.dkr.ecr.sa-east-1.amazonaws.com/openfast-containers:latest
+
+aws ecs run-task \
+    --cluster openfast-cluster \
+    --task-definition degrading_fleet_task \
+    --network-configuration awsvpcConfiguration="{subnets=[subnet-0cd930b740f90eaab, subnet-08b465e8d7e9528d1, subnet-026a54bb3a831261a],securityGroups=[sg-0f3aa0dee2d246be3],assignPublicIp=ENABLED}" \
+    --enable-execute-command \
+    --launch-type FARGATE
+
+aws ecs run-task \
+    --cluster openfast-cluster \
+    --task-definition second_fleet_task \
+    --network-configuration awsvpcConfiguration="{subnets=[subnet-0cd930b740f90eaab, subnet-08b465e8d7e9528d1, subnet-026a54bb3a831261a],securityGroups=[sg-0f3aa0dee2d246be3],assignPublicIp=ENABLED}" \
+    --enable-execute-command \
+    --launch-type FARGATE
+
+aws ecs run-task \
+    --cluster openfast-cluster \
+    --task-definition degrading_fleet_task:latest \
+    --network-configuration awsvpcConfiguration="{subnets=[subnet-0cd930b740f90eaab, subnet-08b465e8d7e9528d1, subnet-026a54bb3a831261a],securityGroups=[sg-0f3aa0dee2d246be3],assignPublicIp=ENABLED}" \
+    --enable-execute-command \
+    --launch-type FARGATE
+
+aws ecs execute-command  \
+    --cluster openfast-cluster \
+    --task e5ca3f97ab6d4fb5980684cc92969a2c \
+    --command "/bin/bash" \
+    --interactive
+
+==============================================================================================================================================
+aws ecs describe-tasks \
+    --cluster openfast-simulation-container \
+    --tasks arn:aws:ecs:sa-east-1:358348566245:task/openfast-simulation-container/d89f026e068440dcb70f2dc01e94d818
+
+aws s3 cp /openfast/1.5MW/turbine1-1692891476.out s3://openfast-pipeline-training/landing-data/turbine1-1692891476.out
